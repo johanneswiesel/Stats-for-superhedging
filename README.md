@@ -9,8 +9,8 @@ This repository contains the implementations of the numerical examples in "Robus
 
 ## Running the programs
 
-* Each folder corresponds to one estimator in the paper.
-* The default parameters of the programs are as used for the paper. At the bottom of each file, parameter values can be adjusted.
+* Each script contains the implementation of one estimator
+* The folders contain the code for the plots in the paper
 
 ## License
 
