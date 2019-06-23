@@ -4,7 +4,7 @@ This repository contains the implementations of the numerical examples in "Robus
 
 ## Prerequisites
 
-* Python, Tensorflow, NumPy, Matplotlib, Pandas, Gurobi
+* Python, Tensorflow, NumPy, Matplotlib, Pandas, Gurobipy
 * The programs were tested with Python 3.7.0
 
 ## Running the programs
