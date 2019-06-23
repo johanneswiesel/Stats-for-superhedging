@@ -138,7 +138,7 @@ if __name__ == '__main__':
         return max(0, 1 / d * sum(r) - 1)
     
     def F(x):
-        return(x)
+        return(2*x)
         
     # No of runs and samples
     runs = 10**0
