@@ -5,7 +5,7 @@
 """
 
 import numpy as np
-from plugin_github import plugin_gurobi
+from Plugin-estimator import plugin_gurobi
 import matplotlib.pyplot as plt
 import scipy.stats as sct
 from scipy.optimize import minimize
