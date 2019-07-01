@@ -1,7 +1,3 @@
-"""
-@author: Johannes Wiesel
-"""
-
 import numpy as np
 from scipy.optimize import * 
 from plugin_github import plugin_gurobi
@@ -29,11 +25,11 @@ def hybrid_opt(runs, N, F, g, g_max):
                 eps = 0.01/2/len(temp)
                 def cpt(x):
                     return -(np.dot(c,x[:len(c)])-g_max*(1+g_max/i)*(max(np.append(x[len(c):], np.zeros(len(c)-i))/np.maximum(x[:len(c)], eps))-1))
-                constr1 = LinearConstraint(np.append(np.ones(len(c)), np.zeros(i)), 1-eps, 1+eps)
-                constr1a =  LinearConstraint(np.append(np.zeros(len(temp)), np.ones(i)), 1-eps, 1+eps)
-                constr2 = LinearConstraint(np.append(temp, np.zeros(i)), 1-eps, 1+eps)
-                constr2a = LinearConstraint(np.append(np.zeros(len(c)), temp[0:i]), 1-eps, 1+eps)
-                constr3 = NonlinearConstraint(min, -eps,1+eps)
+                constr_prob = LinearConstraint(np.append(np.ones(len(c)), np.zeros(i)), 1-eps, 1+eps)
+                constr_prob_a =  LinearConstraint(np.append(np.zeros(len(temp)), np.ones(i)), 1-eps, 1+eps)
+                constr_mart = LinearConstraint(np.append(temp, np.zeros(i)), 1-eps, 1+eps)
+                constr_mart_a = LinearConstraint(np.append(np.zeros(len(c)), temp[0:i]), 1-eps, 1+eps)
+                constr_prob_b = NonlinearConstraint(min, -eps,1+eps)
             
                 if sum(x0) == 0:
                     #Initialise x0
@@ -62,7 +58,8 @@ def hybrid_opt(runs, N, F, g, g_max):
                 while aux_s== False and count<= 10**2:
                     print(j,i,count)
                     z = x0 +(-0.5+np.random.rand())*eps/len(temp)/max(temp)
-                    aux = minimize(cpt, x0=z,method='SLSQP', constraints= {constr1, constr1a, constr2, constr2a, constr3}, 
+                    aux = minimize(cpt, x0=z,method='SLSQP', constraints= {constr_prob, constr_prob_a, constr_mart,
+                                                                           constr_mart_a, constr_prob_b}, 
                                    tol=1e-02, options={"maxiter": 1000000})
                     aux_s = aux.success
                     count += 1
@@ -76,7 +73,7 @@ def hybrid_opt(runs, N, F, g, g_max):
 
 
 if __name__ == '__main__':
-    N = 2*10**1
+    N = 2*10 ** 1
     runs = 2*10 ** 1
     
     #test exponential
