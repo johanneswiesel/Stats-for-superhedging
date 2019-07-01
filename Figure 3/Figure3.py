@@ -7,7 +7,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.stats as sct
 import pylab
 from plugin_github import plugin_gurobi
 
