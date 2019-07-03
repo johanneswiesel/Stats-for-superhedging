@@ -5,7 +5,7 @@
 """
 import numpy as np
 from scipy.optimize import * 
-from plugin_github import plugin_gurobi
+from Plugin_estimator import plugin_gurobi
 import matplotlib.pyplot as plt
 
 def hybrid_opt(runs, N, F, g, g_max):
