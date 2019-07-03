@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""
+"""
 @author: Johannes Wiesel
 """
 
@@ -9,7 +9,8 @@ import pandas as pd
 import pylab
 import arch
 from scipy.optimize import minimize
-from Wasserstein_stats import calculate_wasserstein      
+from Wasserstein_stats import calculate_wasserstein  
+import tensorflow as tf  
 
 #Calculate AVAR-estimator directly
 def percentile(a,p):
