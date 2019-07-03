@@ -1,4 +1,4 @@
-# Robust estimation of superhedging prices
+# Robust estimation of superhedging prices 
 
 This repository contains the implementations of the numerical examples in "Robust estimation of superhedging prices".
 
