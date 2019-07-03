@@ -7,7 +7,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pylab
-from plugin_github import plugin_gurobi
+from Plugin_estimator import plugin_gurobi
 
 
 if __name__ == '__main__':
