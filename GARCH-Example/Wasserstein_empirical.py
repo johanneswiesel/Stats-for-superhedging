@@ -73,9 +73,6 @@ def calculate_wasserstein (data, epsilon_const, alpha, g_wass):
     diff = AVAR_f(g_wass(x2) - tf.reduce_sum(H_variable * (x2 - 1), axis=1), tau_variable) - h_1 - tf.nn.relu(lambda_variable) * tf.sqrt(tf.reduce_sum(tf.square(x-x2), axis=1))
     obj_fun = tf.nn.relu(lambda_variable) * EPS_N + tf.reduce_mean(h_marg) + GAMMA * tf.reduce_mean(tf.square(tf.nn.relu(diff))) + tf.nn.relu(-lambda_variable)
     
-    # varlist = [var for tf.trainable_variables() if var.name=='tau_variable' or var.name='lambda_variable']
-    # train_op = tf.train.AdamOptimizer(learning_rate=0.0001, beta1=0.99, beta2=0.995).minimize(obj_fun, var_list=varlist)
-    
     train_op = tf.train.AdamOptimizer(learning_rate=0.0001, beta1=0.99, beta2=0.995).minimize(obj_fun)
     
     with tf.Session() as sess:
