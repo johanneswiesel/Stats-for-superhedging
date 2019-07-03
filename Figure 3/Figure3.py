@@ -4,7 +4,6 @@
 @author: Johannes Wiesel
 """
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 import pylab
@@ -13,14 +12,14 @@ from plugin_github import plugin_gurobi
 
 if __name__ == '__main__':
     # No of runs and samples
-    runs=10**3
-    N=10**4
+    runs = 10**3
+    N = 10**4
     
     def g(x):
         return np.array([int(i <= 0.5) for i in x])
 
     #test exponential
-    la=1
+    la = 1
     def F(x,la):
         return -np.log(1-x)/la
     def F1(x):
