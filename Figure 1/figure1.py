@@ -37,7 +37,7 @@ ax = fig.add_subplot(111, projection='3d')
 x = points[:,0]
 y = points[:,1]
 z = np.sqrt((x-1)**2+(y-1)**2)
-z[0:4]=[0,0,0,0]
+z[0:4] = [0,0,0,0]
 ax.plot_trisurf(x,y,z)
 
 ax.scatter(points[4:,0], points[4:,1], points[4:,2], c=points[4:,2])
