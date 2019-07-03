@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Jun 23 14:21:29 2019
-
 @author: Johannes Wiesel
 """
 
@@ -11,7 +9,7 @@ from gurobipy import *
 import matplotlib.pyplot as plt
 import pylab
 
-#Plugin estimator Gurobi version
+# Plugin estimator Gurobi version
 def plugin_gurobi(runs, N, F,g):
     no = range(0, runs)
     ind = range(0, N, 1)
@@ -20,7 +18,7 @@ def plugin_gurobi(runs, N, F,g):
         print(j)
         data =  F(np.random.random_sample([N, 1]))
         
-        #Set up gurobi model
+        # Set up gurobi model
         model = Model()
         model.setParam( 'OutputFlag', False )
         
@@ -40,7 +38,7 @@ def plugin_gurobi(runs, N, F,g):
         
         model.update()
     
-        #Run optimisation
+        # Run optimisation
         for i in ind:
             expr = LinExpr()
             expr += -vars[0]
@@ -60,20 +58,20 @@ if __name__ == '__main__':
     def g(x):
         return abs(x-1)
     
-    # Runs and plots
-    runs=10**2
-    N=10**2
+    # Number of runs and plots
+    runs = 10**2
+    N = 10**2
     
     #test uniform with thinner tails
     def F(x,n):
         return (np.power(2*x,1/(n+1)))*(x<0.5)+(2-np.power(2*(1-x),1/(n+1)))*(x>=0.5)
-    n=1
+    n = 1
     def F1(x):
         return F(x,n)
     
-    val = plugin_gurobi(runs,N,F1,g)
+    plugin = plugin_gurobi(runs,N,F1,g)
     
     plt.figure(figsize=(16.000, 8.000), dpi=100)
-    plt.plot(range(0,N),val.mean(axis=1))
+    plt.plot(range(0,N), plugin.mean(axis=1))
     
     
