@@ -18,7 +18,7 @@ def percentile(a,p):
 def avar(data, g, alpha):
     def avar_cpt(x):
         return np.mean(percentile(g(data)-x[0]*(data-1), alpha))
-    res = minimize(avar_cpt,x0=[0], method='BFGS').fun
+    res = minimize(avar_cpt, x0=[0], method='BFGS').fun
     return(res)
         
 def simulate_garch(dates, garch_parameters, no_samples, starting_val=1): #simulates GARCH(1,1) with student-t distribution according to given dates, starting value 1
@@ -76,20 +76,16 @@ def monte_carlo_garch(data, garch_parameters, no_samples, no_mc, g, alpha):
 
 if __name__ == '__main__':
 
-    ###########################################################
     # Test with simulated real data - constant GARCH(1,1) model
     garch_params = [0.02, 0.1, 0.83, 5]
     N = 10**6 #Data points to calculate true value
     dates = pd.DataFrame(index=range(0,N))
     garch_simulation = simulate_garch(dates, garch_params, 1)
     returns_garch_simulation = np.exp(garch_simulation/100)
-    #plt.plot(returns_garch_simulation)
     
-    #check model
+    # Check model
     model = arch.arch_model(garch_simulation,mean='Zero', vol='GARCH', dist='StudentsT')
     model_fit = model.fit()
-    #print(model_fit)
-    ####
     
     #Concrete application 
     def g(x):
@@ -100,36 +96,36 @@ if __name__ == '__main__':
     #Convention price S0=1
     true_value = avar(returns_garch_simulation,g, alpha)
     
-    #Rolling estimation
-    n = 52#10**3 # length of simulated data
+    # Rolling estimation
+    n = 10**3 # length of simulated data
     dates_est = pd.DataFrame(index=range(0,n))
     garch_samples_est = simulate_garch(dates_est, garch_params, 1)
     returns_garch_est = np.exp(garch_samples_est/100)
-    #plt.plot(returns_garch_est)
     
-    #Plugin estimator on given data
+    # Plugin estimator on given data
     def avar_concrete(data):
         return (avar(data,g,alpha))
     plugin_avar = returns_garch_est.rolling(interval).apply(avar_concrete)
     
-    #Wasserstein estimator
+    # Wasserstein estimator
     def g_wass(r):
             return tf.nn.relu(r-1)
     eps_const = 0.5
     def wasserstein_concrete(data):
-        return (calculate_wasserstein(data, eps_const, alpha, g_wass))
+        return calculate_wasserstein(data, eps_const, alpha, g_wass)
     
     wasserstein_avar = returns_garch_est.rolling(interval).apply(wasserstein_concrete)
     
-    #Monte Carlo GARCH(1,1)
+    # Monte Carlo GARCH(1,1)
     no_samples = 10**2
     no_mc = 10**2
     garch_params_est = estimate_garch(garch_samples_est, interval)
     garch_avar = monte_carlo_garch(dates_est, garch_params_est, no_samples, no_mc, g, alpha)
+    # Adapt for plot
     garch_avar[garch_avar < 0 ] = 0
     garch_avar[ garch_avar > 0.04] = 0.04
     
-    #Plot
+    # Plot
     plt.figure(figsize=(16.000, 8.000), dpi=100)
     plt.plot(pd.DataFrame(data=np.repeat(true_value, plugin_avar.shape[0]), index=plugin_avar.index), label='True Value', linewidth = 3)
     plt.plot(plugin_avar, label='Plugin historical', linewidth=3)
@@ -139,31 +135,29 @@ if __name__ == '__main__':
     pylab.savefig('garch_fixed_par.pdf')
     
     #########################################################
-    #Test with simulated data - Changing GARCH(1,1) model
+    # Test with simulated data - Changing GARCH(1,1) model
     garch_params = [0.02, 0.1, 0.8, 5]
     garch_params2 = [0.05, 0.14, 0.83, 20]
-    N = 10**6 #Data points to calculate true value
+    N = 10**6 # Data points to calculate true value
     dates = pd.DataFrame(index=range(0,N))
     garch_simulation2 = simulate_garch(dates, garch_params2, 1)
     returns_garch_simulation2 = np.exp(garch_simulation2/100)
-    #plt.plot(returns_garch_simulation2)
     
-    #check model
+    # Check model
     model2 = arch.arch_model(garch_simulation2,mean='Zero', vol='GARCH', dist='StudentsT')
     model_fit2 = model2.fit()
-    #print(model_fit)
-    ####
+
     
-    #Concrete application 
+    # Concrete application 
     def g(x):
         return(np.maximum(x-1,0))
     alpha = 0.95
     interval = 50
     
-    #Convention price S0=1
+    # Convention price S0=1
     true_value2 = avar(returns_garch_simulation2,g, alpha)
     
-    #Rolling estimation
+    # Rolling estimation
     n = 10**3 # length of simulated data
     dates_est2 = pd.DataFrame(index=range(0,n))
     garch_samples_est2 = simulate_garch(dates_est, garch_params, 1, starting_val=1)
@@ -172,14 +166,13 @@ if __name__ == '__main__':
     garch_samples_est_temp = simulate_garch(dates_est2, garch_params2, 1, starting_val=garch_samples_est2.iloc[2*n//3-1])
     garch_samples_est2.iloc[2*n//3:] = garch_samples_est_temp.iloc[0:n//3+1].values
     returns_garch_est2 = np.exp(garch_samples_est2/100)
-    #plt.plot(returns_garch_est)
     
-    #Plugin estimator on given data
+    # Plugin estimator on given data
     def avar_concrete(data):
         return (avar(data,g,alpha))
     plugin_avar2 = returns_garch_est2.rolling(interval).apply(avar_concrete)
     
-    #Wasserstein estimator
+    # Wasserstein estimator
     def g_wass(r):
             return tf.nn.relu(r-1)
     eps_const = 0.5
@@ -188,7 +181,7 @@ if __name__ == '__main__':
     
     wasserstein_avar2 = returns_garch_est2.rolling(interval).apply(wasserstein_concrete)
     
-    #Monte Carlo GARCH(1,1)
+    # Monte Carlo GARCH(1,1)
     no_samples = 10**2
     no_mc = 10**2
     garch_params_est2 = estimate_garch(garch_samples_est2, interval)
@@ -196,7 +189,7 @@ if __name__ == '__main__':
     garch_avar2[garch_avar2 < 0 ] = 0
     garch_avar2[ garch_avar2 > 0.1] = 0.1
     
-    #Plot
+    # Plot
     plt.figure(figsize=(16.000, 8.000), dpi=100)
     true_value_mat = np.append(np.append(np.repeat(true_value,n//3), np.repeat(true_value2, n//3)),np.repeat(true_value,n//3+1))
     plt.plot(pd.DataFrame(data = true_value_mat, index = plugin_avar.index), label = 'True value', linewidth =3)
@@ -205,17 +198,4 @@ if __name__ == '__main__':
     plt.plot(wasserstein_avar2, label = 'Wasserstein historical', linewidth=3)
     plt.legend()
     pylab.savefig('garch_changing_par.pdf')
-    
-    #storing values
-    import pickle
-    
-    f = open('avar_empiricial_garch.pckl', 'wb')
-    pickle.dump([true_value, true_value2, garch_avar, plugin_avar, garch_avar2, plugin_avar2,
-                 wasserstein_avar, wasserstein_avar2], f)
-    f.close()
-    
-    f = open('avar_empiricial_garch.pckl', 'rb')
-    [true_value, true_value2, garch_avar, plugin_avar, garch_avar2, plugin_avar2,
-     wasserstein_avar,wasserstein_avar2] = pickle.load(f)
-    f.close()
-    
+   
