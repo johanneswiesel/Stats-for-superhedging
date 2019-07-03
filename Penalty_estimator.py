@@ -1,11 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+@author: Johannes Wiesel
+"""
 import numpy as np
 from scipy.optimize import * 
 from plugin_github import plugin_gurobi
 import matplotlib.pyplot as plt
-
-
-def ind(x,eps):
-    return(np.max(x-eps,0)+np.min(x+eps,0))
 
 def hybrid_opt(runs, N, F, g, g_max):
     res = np.zeros((N,runs))
@@ -32,7 +33,7 @@ def hybrid_opt(runs, N, F, g, g_max):
                 constr_prob_b = NonlinearConstraint(min, -eps,1+eps)
             
                 if sum(x0) == 0:
-                    #Initialise x0
+                    # Initialise x0
                     x0[i] = 0
                     x0[-1] = 0
                     x0[i] = 1-sum(x0)+(np.dot(x0, temp)-1)/temp[-1]
@@ -48,9 +49,9 @@ def hybrid_opt(runs, N, F, g, g_max):
                     
                     x0 = np.append(x0,x1)
                 else:
-                    #Use z as seed
+                    # Use z as seed
                     a = np.random.rand()*eps/len(temp)/max(temp)
-                    if i>= 10:
+                    if i >= 10:
                         x0 = np.append(np.append(np.append(z[:i],a),z[i:len(c)]), np.append(z[len(c):],a))
                     else:
                         x0 = np.append(np.append(np.append(z[:i],a),np.append(z[i:len(c)],a)), np.append(z[len(c):],a))
@@ -91,7 +92,7 @@ if __name__ == '__main__':
     hybrid = hybrid_opt(runs, N, F1, g, 1)
     
     
-    #Plot
+    # Plot
     plt.loglog(range(0,N), plugin.mean(axis=1), label="Plugin")
     plt.plot(np.nanmean(hybrid,axis=1))
     plt.plot(range(0,N), np.repeat(1,N), label="True Value")
