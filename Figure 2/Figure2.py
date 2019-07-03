@@ -16,9 +16,6 @@ def g(x):
 def percentile(a,p):
     return np.sort(a)[int(p*len(a))-1:]
 
-def percentile(a,p):
-    return np.sort(a, axis=0)[int(p*len(a))-1:]
-
 #Approximation of Wasserstein estimator
 def Wasserstein_approx(runs, N, F, g):
     res = np.zeros((N,runs))
