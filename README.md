@@ -10,7 +10,7 @@ This repository contains the implementations of the numerical examples in "Robus
 ## Running the programs
 
 * Each script contains the implementation of one estimator.
-* The folders contain the code for plots in the paper.
+* The folder contain the code for GARCH plots in the paper.
 
 ## License
 
