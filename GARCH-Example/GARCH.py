@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-@author: Johannes Wiesel
+@author: Johannes Wiesel 
 """
 
 import numpy as np
